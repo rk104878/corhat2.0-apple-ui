@@ -1,61 +1,122 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../index.css";
 import ContactPopup from "./ContactPopup";
-import { useNavigate } from "react-router-dom";   // ✅ NEW
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const navigate = useNavigate(); // ✅ navigation
+  const navigate = useNavigate();
+
+  // Scroll Detect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className="flex items-start justify-between px-6 py-4 bg-white text-black emoji-cursor">
+    <div
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300
+      ${scrolled
+        ? "backdrop-blur-lg bg-white/70 shadow-md"
+        : "bg-[#FFFDEB]"
+      }`}
+    >
 
-      {/* Logo */}
-      <div className="ml-40 text-2xl font-bold">
-        Logo
-      </div>
+      <div className="flex items-center justify-between px-4 md:px-10 py-4">
 
-      {/* Navigation Links */}
-      <div className="w-1/3 flex justify-center gap-24">
-        <span>Home</span>
-        <span>About</span>
-        <span>Services</span>
-        <span>Blog</span>
-        <span>Contact</span>
-      </div>
+        {/* LOGO */}
+        <div className="text-xl md:text-2xl font-bold">
+          📓 MyNotes
+        </div>
 
-      {/* Buttons */}
-      <div className="flex gap-4 mr-40">
+        {/* DESKTOP MENU */}
+        <div className="hidden lg:flex gap-10 font-medium">
+          <span className="cursor-pointer hover:text-blue-500">Home</span>
+          <span className="cursor-pointer hover:text-blue-500">About</span>
+          <span className="cursor-pointer hover:text-blue-500">Services</span>
+          <span className="cursor-pointer hover:text-blue-500">Blog</span>
+          <span className="cursor-pointer hover:text-blue-500">Contact</span>
+        </div>
 
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">
-          Delete Now
-        </button>
+        {/* DESKTOP BUTTONS */}
+        <div className="hidden lg:flex gap-4">
 
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:scale-105 transition">
+            Delete Now
+          </button>
+
+          <button
+            className="border border-black px-4 py-2 rounded-lg hover:bg-black hover:text-white transition"
+            onClick={() => setIsPopupOpen(true)}
+          >
+            Contact Now
+          </button>
+
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:scale-105 transition"
+            onClick={() => navigate("/notes")}
+          >
+            Download Notes
+          </button>
+
+        </div>
+
+        {/* MOBILE MENU BUTTON */}
         <button
-          className="border border-black text-black px-4 py-2 rounded-lg"
-          onClick={() => setIsPopupOpen(true)}
+          className="lg:hidden text-2xl"
+          onClick={() => setMenuOpen(!menuOpen)}
         >
-          Contact Now
-        </button>
-
-        {/* ✅ OPEN NOTES PAGE */}
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-          onClick={() => navigate("/notes")}
-        >
-          Download Notes
+          ☰
         </button>
 
       </div>
 
-      {/* Contact Popup */}
+      {/* MOBILE MENU */}
+      {menuOpen && (
+        <div className="lg:hidden bg-white shadow-md px-6 py-6 space-y-5">
+
+          <span className="block cursor-pointer">Home</span>
+          <span className="block cursor-pointer">About</span>
+          <span className="block cursor-pointer">Services</span>
+          <span className="block cursor-pointer">Blog</span>
+          <span className="block cursor-pointer">Contact</span>
+
+          <div className="flex flex-col gap-3 pt-4">
+
+            <button className="bg-blue-500 text-white py-2 rounded-lg">
+              Delete Now
+            </button>
+
+            <button
+              className="border border-black py-2 rounded-lg"
+              onClick={() => setIsPopupOpen(true)}
+            >
+              Contact Now
+            </button>
+
+            <button
+              className="bg-blue-600 text-white py-2 rounded-lg"
+              onClick={() => navigate("/notes")}
+            >
+              Download Notes
+            </button>
+
+          </div>
+        </div>
+      )}
+
       <ContactPopup
         isOpen={isPopupOpen}
         onClose={() => setIsPopupOpen(false)}
       />
-
     </div>
   );
 };

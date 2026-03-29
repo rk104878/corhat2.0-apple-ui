@@ -1,8 +1,9 @@
 import React from "react";
 import WorkCard from "./WorkCard";
-import '../index.css'; // ensure CSS is imported
+import "../index.css";
 
 const OurWorkSection = () => {
+
   const data = [
     {
       image: "/firstImage.png",
@@ -28,23 +29,33 @@ const OurWorkSection = () => {
   ];
 
   return (
-    <div className="py-16 px-6 md:px-12 lg:px-20 bg-white-500 emoji-cursor">
-      
-      <p className="text-center text-sm text-gray-500 uppercase">
+    <section className="bg-white py-14 sm:py-16 px-4 sm:px-8 md:px-12 lg:px-20 emoji-cursor">
+
+      {/* SMALL TITLE */}
+      <p className="text-center text-xs sm:text-sm text-gray-500 uppercase tracking-widest">
         Our Work
       </p>
 
-      <h2 className="text-center text-3xl md:text-4xl font-bold mt-2">
+      {/* HEADING */}
+      <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold mt-3">
         Creating pathways for success
       </h2>
 
-      <div className="grid md:grid-cols-3 gap-6 mt-10">
+      {/* GRID */}
+      <div className="
+        grid
+        grid-cols-1
+        sm:grid-cols-2
+        lg:grid-cols-3
+        gap-6
+        mt-10
+      ">
         {data.map((item, index) => (
           <WorkCard key={index} {...item} />
         ))}
       </div>
 
-    </div>
+    </section>
   );
 };
 
